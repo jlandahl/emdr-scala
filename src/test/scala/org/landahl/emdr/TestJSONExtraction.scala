@@ -4,13 +4,10 @@ import scala.io.Source
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers._
 
-import model.UUDIF
-import model.UploadKey
-import model.Generator
-import model.OrderRow
+import model.{UUDIF, UploadKey, Generator, OrderRow, HistoryRow} 
 
 class TestJSONExtraction extends FunSuite {
-  test("extract orders") {
+  test("extract order1") {
     val uudif = UUDIF.extract(order1)
     uudif.resultType should equal("orders")
     uudif.version should equal("0.1")
@@ -103,6 +100,60 @@ class TestJSONExtraction extends FunSuite {
       "regionID" : 10000065,
       "typeID" : 11136,
       "rows" : []
+    }
+  ]
+}
+  """
+
+  test ("extract history1") {
+    val uudif = UUDIF.extract(history1)
+    uudif.resultType should equal("history")
+    uudif.version should equal("0.1")
+    uudif.uploadKeys.size should equal(2)
+    uudif.uploadKeys(0) should equal(UploadKey("emk", "abc"))
+    uudif.uploadKeys(1) should equal(UploadKey("ec", "def"))
+    uudif.generator should equal (Generator("Yapeal", "11.335.1737"))
+    uudif.currentTime should equal("2011-10-22T15:46:00+00:00")
+    uudif.rowsets.size should equal(1)
+    
+    val rs0 = uudif.rowsets(0)
+    rs0.generatedAt should equal("2011-10-22T15:42:00+00:00")
+    rs0.regionID should equal(Some(10000065))
+    rs0.typeID should equal(11134)
+    rs0.rows.size should equal(2)
+
+    rs0.rows(0) match {
+      case row: HistoryRow => {
+        row.date should equal("2011-12-03T00:00:00+00:00")
+        row.orders should equal(40)
+        row.quantity should equal(40)
+        row.low should equal(1999)
+        row.high should equal(499999.99)
+        row.average should equal(35223.50)
+      }
+    }
+  }
+  
+  val history1 = """
+{
+  "resultType" : "history",
+  "version" : "0.1",
+  "uploadKeys" : [
+    { "name" : "emk", "key" : "abc" },
+    { "name" : "ec" , "key" : "def" }
+  ],
+  "generator" : { "name" : "Yapeal", "version" : "11.335.1737" },
+  "currentTime" : "2011-10-22T15:46:00+00:00",
+  "columns" : ["date","orders","quantity","low","high","average"],
+  "rowsets" : [
+    {
+      "generatedAt" : "2011-10-22T15:42:00+00:00",
+      "regionID" : 10000065,
+      "typeID" : 11134,
+      "rows" : [
+        ["2011-12-03T00:00:00+00:00",40,40,1999,499999.99,35223.50],
+        ["2011-12-02T00:00:00+00:00",83,252,9999,11550,11550]
+      ]
     }
   ]
 }
