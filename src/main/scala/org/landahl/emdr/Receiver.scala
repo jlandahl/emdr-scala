@@ -1,15 +1,15 @@
 package org.landahl.emdr
 
+import com.typesafe.config.Config
 import akka.actor.{Actor, ActorRef}
-import akka.camel.{Producer, Oneway}
 
-class Receiver(queueProducer: ActorRef) extends Actor {
+class Receiver(config: Config, queueProducer: ActorRef) extends Actor {
   import akka.zeromq.{ZMQMessage, ZeroMQExtension, SocketType, Listener, Connect, SubscribeAll}
 
   ZeroMQExtension(context.system).newSocket(
       SocketType.Sub,
       Listener(self), 
-      Connect("tcp://relay-us-central-1.eve-emdr.com:8050"), 
+      Connect(config.getString("receiver.url")), 
       SubscribeAll)
 
   def receive = {
@@ -30,18 +30,20 @@ class Receiver(queueProducer: ActorRef) extends Actor {
   }
 }
 
-class QueueProducer extends Actor with Producer with Oneway {
-  def endpointUri = "activemq:queue:emdr"
-}
-
 object Receiver extends App {
+  import com.typesafe.config.ConfigFactory
   import akka.actor.{ActorSystem, Props}
-  import akka.camel.CamelExtension
+  import akka.camel.{Producer, Oneway, CamelExtension}
   import org.apache.activemq.camel.component.ActiveMQComponent
 
+  class QueueProducer extends Actor with Producer with Oneway {
+    def endpointUri = config.getString("queue.url")
+  }
+
+  val config = ConfigFactory.load()
   val system = ActorSystem("EMDR")
   val camel = CamelExtension(system)
-  camel.context.addComponent("activemq", ActiveMQComponent.activeMQComponent("tcp://10.1.1.12:61616"))
+  camel.context.addComponent("activemq", ActiveMQComponent.activeMQComponent(config.getString("activemq.url")))
   val queueProducer = system.actorOf(Props[QueueProducer], "queueProducer")
-  val receiver = system.actorOf(Props(new Receiver(queueProducer)), "receiver")
+  val receiver = system.actorOf(Props(new Receiver(config, queueProducer)), "receiver")
 }
