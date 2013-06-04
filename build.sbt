@@ -6,6 +6,7 @@ scalaVersion := "2.10.1"
 
 libraryDependencies ++= List(
   "com.typesafe" % "config" % "1.0.1",
+  "org.apache.camel" % "camel-scala" % "2.11.0", 
   "com.typesafe.akka" %% "akka-zeromq" % "2.1.4",
   "com.typesafe.akka" %% "akka-camel" % "2.1.4",
   "org.apache.activemq" % "activemq-camel" % "5.8.0",
