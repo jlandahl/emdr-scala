@@ -1,8 +1,9 @@
 package org.landahl.emdr
 
-import akka.actor.Actor
+import akka.actor.{Actor, ActorRef}
+import akka.camel.{Producer, Oneway}
 
-class Receiver extends Actor {
+class Receiver(queueProducer: ActorRef) extends Actor {
   import akka.zeromq.{ZMQMessage, ZeroMQExtension, SocketType, Listener, Connect, SubscribeAll}
 
   ZeroMQExtension(context.system).newSocket(
@@ -11,13 +12,11 @@ class Receiver extends Actor {
       Connect("tcp://relay-us-central-1.eve-emdr.com:8050"), 
       SubscribeAll)
 
-  def transformer = context.actorSelection("../transformer")
-  
   def receive = {
     case message: ZMQMessage ⇒ {
       val data = message.frames(0).payload.toArray
       val json = inflate(data)
-      transformer ! json
+      queueProducer ! json
     }
     case _ => {}
   }
@@ -31,10 +30,18 @@ class Receiver extends Actor {
   }
 }
 
+class QueueProducer extends Actor with Producer with Oneway {
+  def endpointUri = "activemq:queue:emdr"
+}
 
 object Receiver extends App {
   import akka.actor.{ActorSystem, Props}
+  import akka.camel.CamelExtension
+  import org.apache.activemq.camel.component.ActiveMQComponent
+
   val system = ActorSystem("EMDR")
-  val transformer = system.actorOf(Props[Transformer], "transformer")
-  val receiver = system.actorOf(Props[Receiver], "receiver")
+  val camel = CamelExtension(system)
+  camel.context.addComponent("activemq", ActiveMQComponent.activeMQComponent("tcp://10.1.1.12:61616"))
+  val queueProducer = system.actorOf(Props[QueueProducer], "queueProducer")
+  val receiver = system.actorOf(Props(new Receiver(queueProducer)), "receiver")
 }
