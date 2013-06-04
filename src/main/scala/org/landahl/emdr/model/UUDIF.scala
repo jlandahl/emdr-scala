@@ -17,7 +17,7 @@ case class UUDIF(
 object UUDIF {
   def extract(json: String): UUDIF = {
     implicit val formats = DefaultFormats
-    val _uudif = parse(json).extract[_UUDIF]
+    val _uudif = parse(json).extract[JsonUUDIF]
     val rowsets = _uudif.rowsets.map { rowset =>
       val rows = _uudif.resultType match {
         case "orders" => rowset.rows.map(r => extractRow[OrderRow](_uudif.columns, r))
@@ -77,16 +77,21 @@ case class HistoryRow(
   average: Double
 ) extends Row
 
-// _UUDIF and _Rowset are used only for initial JSON extraction
+// JsonUUDIF and JsonRowset are used only for initial JSON extraction
 
-case class _UUDIF(
+case class JsonUUDIF(
   resultType: String,
   version: String,
   uploadKeys: List[UploadKey],
   generator: Generator,
   currentTime: String,
-  columns: List[String],
-  rowsets: List[_Rowset]
+  columns: List[String],   // not used in UUDIF
+  rowsets: List[JsonRowset]
 )
 
-case class _Rowset(generatedAt: String, regionID: Option[Int], typeID: Int, rows: List[JValue])
+case class JsonRowset(
+  generatedAt: String, 
+  regionID: Option[Int], 
+  typeID: Int, 
+  rows: List[JValue]   // becomes List[Row] in Rowset
+)
