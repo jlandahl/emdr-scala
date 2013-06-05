@@ -16,7 +16,8 @@ libraryDependencies ++= List(
   "org.xerial" % "sqlite-jdbc" % "3.7.2",
   //"net.sf.ehcache" % "ehcache-core" % "2.6.5",
   "ch.qos.logback" % "logback-classic" % "1.0.11",
-  "org.scalatest" %% "scalatest" % "1.9.1" % "test"
+  "org.scalatest" %% "scalatest" % "1.9.1" % "test",
+  "org.apache.commons" % "commons-math3" % "3.2"
 )
 
 
