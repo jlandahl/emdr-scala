@@ -50,18 +50,18 @@ object UUDIF {
 
 case class UploadKey(name: String, key: String)
 case class Generator(name: String, version: String)
-case class Rowset(generatedAt: String, regionID: Option[Int], typeID: Int, rows: List[Row])
+case class Rowset(generatedAt: String, regionID: Option[Long], typeID: Long, rows: List[Row])
 
 trait Row
 
 case class OrderRow(
-  solarSystemID: Option[Int],
-  stationID: Int,
+  solarSystemID: Option[Long],
+  stationID: Long,
   orderID: Long,
   bid: Boolean,
   price: Double,
-  volEntered: Int,
-  volRemaining: Int,
+  volEntered: Long,
+  volRemaining: Long,
   range: Int,
   minVolume: Int,
   issueDate: String,
@@ -71,7 +71,7 @@ case class OrderRow(
 case class HistoryRow(
   date: String,
   orders: Int,
-  quantity: Int,
+  quantity: Long,
   low: Double,
   high: Double,
   average: Double
@@ -91,7 +91,7 @@ case class JsonUUDIF(
 
 case class JsonRowset(
   generatedAt: String, 
-  regionID: Option[Int], 
+  regionID: Option[Long], 
   typeID: Int, 
   rows: List[JValue]   // becomes List[Row] in Rowset
 )
