@@ -1,14 +1,13 @@
 package org.landahl.emdr
 
-import scala.io.Source
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers._
 
-import model.{UUDIF, UploadKey, Generator, OrderRow, HistoryRow} 
+import model.{UUDIF, UploadKey, Generator, OrderRow, HistoryRow, SampleData} 
 
 class TestJSONExtraction extends FunSuite {
   test("extract order1") {
-    val uudif = UUDIF.extract(JsonSamples.order1)
+    val uudif = UUDIF.extract(SampleData.orders1)
     uudif.resultType should equal("orders")
     uudif.version should equal("0.1")
     uudif.uploadKeys.size should equal(2)
@@ -64,7 +63,7 @@ class TestJSONExtraction extends FunSuite {
   }
 
   test ("extract history1") {
-    val uudif = UUDIF.extract(JsonSamples.history1)
+    val uudif = UUDIF.extract(SampleData.history1)
     uudif.resultType should equal("history")
     uudif.version should equal("0.1")
     uudif.uploadKeys.size should equal(2)
