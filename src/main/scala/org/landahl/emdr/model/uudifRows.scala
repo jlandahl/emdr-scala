@@ -3,7 +3,7 @@ package org.landahl.emdr.model
 trait Row
 
 case class OrderRow(
-  solarSystemID: Option[Long],
+  solarSystemID: Option[Long],    // can be null (but rarely ever is)
   stationID: Long,
   orderID: Long,
   bid: Boolean,
