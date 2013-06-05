@@ -1,7 +1,7 @@
-package org.landahl.emdr
+package org.landahl.emdr.model
 
-object JsonSamples {
-  val order1 = """
+object SampleData {
+  val orders1 = """
 {
   "resultType" : "orders",
   "version" : "0.1",
@@ -43,26 +43,15 @@ object JsonSamples {
 }
   """
 
-  val order2 = """
+  val orders2 = """
 {
-  "uploadKeys":[{
-    "name":"EVE Central",
-    "key":"0"
-  },{
-    "name":"EVE Market Data Relay",
-    "key":"0"
-  },{
-    "name":"EMDR",
-    "key":"7d89aa58739ae0d6ba375ccbdbbdb41ac9f6a42d"
-  }],
-  "generator":{
-    "version":"1.8.1.4016",
-    "name":"EVEMon.MarketUnifiedUploader"
-  },
-  "currentTime":"2013-06-04T05:35:25+00:00",
   "resultType":"orders",
-  "version":"0.1",
+  "uploadKeys":[],"generator":{"version":"","name":""},"version":"0.1",
+  "currentTime":"2013-06-04T05:35:25+00:00",
+  "columns":["price","volRemaining","range","orderID","volEntered","minVolume","bid","issueDate","duration","stationID","solarSystemID"]
   "rowsets":[{
+    "generatedAt":"2013-06-01T18:51:29+00:00"
+    "regionID":10000020,
     "typeID":11341,
     "rows":[[89000.0,8,32767,2828393997,16,1,false,"2013-05-15T23:26:03+00:00",90,60006601,30001663],
             [200000.0,25,32767,2852747852,26,1,false,"2013-03-04T00:59:42+00:00",90,60006220,30001669],
@@ -77,33 +66,19 @@ object JsonSamples {
             [17504.18,96,2,2983340172,100,1,true,"2013-06-01T00:03:22+00:00",90,60001096,30001671],
             [13100.01,6,40,2859321155,12,1,true,"2013-03-08T15:28:16+00:00",90,60007138,30001711],
             [13411.0,5,-1,2844242370,10,1,true,"2013-03-14T13:03:15+00:00",90,60015010,30021672]],
-    "regionID":10000020,
-    "generatedAt":"2013-06-01T18:51:29+00:00"
   }],
-  "columns":["price","volRemaining","range","orderID","volEntered","minVolume","bid","issueDate","duration","stationID","solarSystemID"]
 }
 """
 
-  val order3 = """
+  val orders3 = """
 {
-  "uploadKeys":[{
-    "name":"EVE Central",
-    "key":"0"
-  },{
-    "name":"EVE Market Data Relay",
-    "key":"0"
-  },{
-    "name":"EMDR",
-    "key":"dcb8527ea3d1391e968b638a16705929e8461188"
-  }],
-  "generator":{
-    "version":"1.8.1.4016",
-    "name":"EVEMon.MarketUnifiedUploader"
-  },
-  "currentTime":"2013-06-04T05:35:26+00:00",
   "resultType":"orders",
-  "version":"0.1",
+  "uploadKeys":[],"generator":{"version":"","name":""},"version":"0.1",
+  "currentTime":"2013-06-04T05:35:26+00:00",
+  "columns":["price","volRemaining","range","orderID","volEntered","minVolume","bid","issueDate","duration","stationID","solarSystemID"]
   "rowsets":[{
+    "generatedAt":"2013-06-04T05:34:52+00:00"
+    "regionID":10000067,
     "typeID":17888,
     "rows":[[1300.0,563815,32767,2953845127,563815,1,false,"2013-05-12T20:19:26+00:00",90,60008095,30005195],
             [1230.0,266434,32767,2968207920,300000,1,false,"2013-05-20T19:45:13+00:00",90,60007063,30005196],
@@ -120,10 +95,33 @@ object JsonSamples {
             [582.04,202910,20,2950078399,300000,1,true,"2013-05-28T20:34:55+00:00",90,60006703,30005254],
             [203.0,100000,32767,2993398497,100000,1,true,"2013-06-03T19:12:22+00:00",90,60001333,30005247],
             [201.6,424000,32767,2319979229,678954,1,true,"2013-06-03T20:21:14+00:00",90,60008398,30005229]],
-    "regionID":10000067,
-    "generatedAt":"2013-06-04T05:34:52+00:00"
   }],
+}
+"""
+
+  val orders4 = """
+{
+  "resultType":"orders",
+  "uploadKeys":[],"generator":{"version":"","name":""},"version":"0.1",
+  "currentTime":"currentTime",
   "columns":["price","volRemaining","range","orderID","volEntered","minVolume","bid","issueDate","duration","stationID","solarSystemID"]
+  "rowsets":[{
+    "generatedAt":"generatedAt"
+    "regionID":1,
+    "typeID":1,
+    "rows":[
+            [10.50, 1000, 1, 0, 1000, 1, false, "", 1, 1, 1],
+            [10.75, 1000, 1, 0, 1000, 1, false, "", 1, 1, 1],
+            [11.00, 1000, 1, 0, 1000, 1, false, "", 1, 1, 1],
+            [11.25, 1000, 1, 0, 1000, 1, false, "", 1, 1, 1],
+            [75.00, 1000, 1, 0, 1000, 1, false, "", 1, 1, 1],
+            [9.00,  1000, 1, 0, 1000, 1, true,  "", 1, 1, 1],
+            [9.01,  1000, 1, 0, 1000, 1, true,  "", 1, 1, 1],
+            [9.50,  1000, 1, 0, 1000, 1, true,  "", 1, 1, 1]
+            [9.51,  1000, 1, 0, 1000, 1, true,  "", 1, 1, 1]
+            [9.60,  1000, 1, 0, 1000, 1, true,  "", 1, 1, 1]
+           ],
+  }],
 }
 """
 
@@ -151,4 +149,5 @@ object JsonSamples {
   ]
 }
   """
+
 }
