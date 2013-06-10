@@ -4,7 +4,7 @@ case class OrderSummary(min: Double, max: Double, mean: Double, median: Double, 
 
 object OrderSummary {
   import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
-  def summarize(orders: Seq[OrderRow]): Option[OrderSummary] = {
+  def summarize(orders: Iterable[Order]): Option[OrderSummary] = {
     if (orders == Nil)
       None
     else {
