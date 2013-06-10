@@ -1,8 +1,7 @@
-package org.landahl.emdr
+package org.landahl.emdr.model
 
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers._
-
 import model.{UUDIF, Rowset, MarketReport, SampleData} 
 
 class TestMarketReport extends FunSuite {
