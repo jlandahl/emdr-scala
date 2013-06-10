@@ -17,7 +17,7 @@ object MarketReport {
   
   def summarizeRowset(rowset: Rowset): Iterable[MarketReport] = {
     // get a List[OrderRow] from rowset.rows, which is List[Row]
-    val orders = rowset.rows.map { case r: OrderRow => r }
+    val orders = rowset.rows.collect { case r: OrderRow => r }
     if (orders == Nil)
       // A Rowset with an empty rows list means someone looked up an item
       // but it was not available in the given region. This is useful information, 
@@ -31,7 +31,8 @@ object MarketReport {
         buy = None,
         sell = None))
     else {
-      // group orders by stationID, the most significant location field
+      // group orders by stationID, the most significant location field; groupings by
+      // solar system and region can be obtained through aggregation
       val byStation = orders.groupBy(_.stationID)
       byStation.map { case (stationID, orders) => 
         val (buy, sell) = orders.partition(_.bid)
