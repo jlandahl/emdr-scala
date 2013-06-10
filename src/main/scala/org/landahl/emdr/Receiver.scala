@@ -9,24 +9,16 @@ class Receiver(config: Config, queueProducer: ActorRef) extends Actor {
   ZeroMQExtension(context.system).newSocket(
       SocketType.Sub,
       Listener(self), 
-      Connect(config.getString("receiver.url")), 
+      Connect(config.getString("emdr.url")), 
       SubscribeAll)
 
   def receive = {
     case message: ZMQMessage ⇒ {
       val data = message.frames(0).payload.toArray
-      val json = inflate(data)
-      queueProducer ! json
+      // simply pass the zipped data directly to the queue
+      queueProducer ! data
     }
     case _ => {}
-  }
-
-  def inflate(data: Array[Byte]) = {
-    val baos = new java.io.ByteArrayOutputStream
-    val ios = new java.util.zip.InflaterOutputStream(baos)
-    ios.write(data, 0, data.length)
-    ios.close
-    baos.toString
   }
 }
 
@@ -37,10 +29,10 @@ object Receiver extends App {
   import org.apache.activemq.camel.component.ActiveMQComponent
 
   class QueueProducer extends Actor with Producer with Oneway {
-    def endpointUri = config.getString("queue.url")
+    def endpointUri = "activemq:emdr.in"
   }
 
-  val config = ConfigFactory.load()
+  val config = ConfigFactory.load
   val system = ActorSystem("EMDR")
   val camel = CamelExtension(system)
   camel.context.addComponent("activemq", ActiveMQComponent.activeMQComponent(config.getString("activemq.url")))
