@@ -29,7 +29,7 @@ object Receiver extends App {
   import org.apache.activemq.camel.component.ActiveMQComponent
 
   class QueueProducer extends Actor with Producer with Oneway {
-    def endpointUri = "activemq:emdr.in"
+    def endpointUri = config.getString("emdr.input")
   }
 
   val config = ConfigFactory.load
