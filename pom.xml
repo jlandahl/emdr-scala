@@ -55,6 +55,7 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test</artifactId>
       <version>${camel.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
     	<groupId>org.apache.activemq</groupId>
@@ -106,13 +107,14 @@
       <version>2.0.M6-SNAP8</version>
       <scope>test</scope>
     </dependency>
-    <!-- unsorted -->
     <dependency>
-    	<groupId>org.scalatest</groupId>
-    	<artifactId>scalatest-maven-plugin</artifactId>
-    	<version>1.0-M2</version>
-    	<type>maven-plugin</type>
+      <groupId>org.scalatest</groupId>
+      <artifactId>scalatest-maven-plugin</artifactId>
+      <version>1.0-M2</version>
+      <type>maven-plugin</type>
+      <scope>test</scope>
     </dependency>
+    <!-- unsorted -->
   </dependencies>
 
   <build>
@@ -167,6 +169,11 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+      	<groupId>org.codehaus.mojo</groupId>
+      	<artifactId>exec-maven-plugin</artifactId>
+      	<version>1.2.1</version>
       </plugin>
     </plugins>
   </build>
