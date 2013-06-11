@@ -1,9 +1,7 @@
-package org.landahl.emdr
+package org.landahl.emdr.model
 
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers._
-
-import org.landahl.emdr.model.{Order, OrderSummary}
 
 class TestOrderSummary extends FunSuite {
   def newOrder(price: Double, bid: Boolean) = {
