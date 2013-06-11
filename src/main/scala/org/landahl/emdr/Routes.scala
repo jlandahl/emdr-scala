@@ -20,6 +20,10 @@ class Routes(config: Config) extends RouteBuilder {
 
   val stationList = config.getList("order-filter.stations").map(_.render.toLong)
 
+  val orderFilter = (order: Order) => {
+    stationList contains order.stationID
+  }
+  
   errorHandler(deadLetterChannel(errorURI))
 
   from(emdrInputURI) ==> {
@@ -37,7 +41,7 @@ class Routes(config: Config) extends RouteBuilder {
         // produce a list of MarketReports for orders matching stationList
         process { exchange =>
           val uudif = exchange.in[UUDIF]
-          exchange.in = MarketReport.fromUUDIF(uudif, o => stationList contains o.stationID).toList
+          exchange.in = MarketReport.fromUUDIF(uudif, orderFilter).toList
         }
         choice {
           // proceed only if there's data to report
