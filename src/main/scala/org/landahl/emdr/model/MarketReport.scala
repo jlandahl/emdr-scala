@@ -2,8 +2,8 @@ package org.landahl.emdr.model
 
 case class MarketReport(
   generatedAt: String,
-  regionID: Long, 
-  solarSystemID: Long, 
+  regionID: Option[Long], 
+  solarSystemID: Option[Long], 
   stationID: Long,
   typeID: Long,
   buy: Option[OrderSummary], 
@@ -11,40 +11,25 @@ case class MarketReport(
 )
 
 object MarketReport {
-  def fromUUDIF(uudif: UUDIF): List[MarketReport] = {
-    uudif.rowsets.flatMap(summarizeRowset(_))
+  def fromUUDIF(uudif: UUDIF, orderFilter: (Order) => Boolean = (order) => true): Iterable[MarketReport] = {
+    uudif.rowsets.flatMap { rowset => 
+      val orders = Order.fromRowset(rowset).filter(orderFilter)
+      MarketReport.fromOrders(orders)
+    }
   }
-  
-  def summarizeRowset(rowset: Rowset): Iterable[MarketReport] = {
-    // get a List[OrderRow] from rowset.rows, which is List[Row]
-    val orders = rowset.rows.collect { case r: OrderRow => r }
-    if (orders == Nil)
-      // A Rowset with an empty rows list means someone looked up an item
-      // but it was not available in the given region. This is useful information, 
-      // so return a MarketReport with buy and sell set to None
-      List(MarketReport(
-        generatedAt = rowset.generatedAt,
-        regionID = rowset.regionID.getOrElse(0),
-        solarSystemID = 0,
-        stationID = 0,
-        typeID = rowset.typeID,
-        buy = None,
-        sell = None))
-    else {
-      // group orders by stationID, the most significant location field; groupings by
-      // solar system and region can be obtained through aggregation
-      val byStation = orders.groupBy(_.stationID)
-      byStation.map { case (stationID, orders) => 
-        val (buy, sell) = orders.partition(_.bid)
-        MarketReport(
-          generatedAt = rowset.generatedAt,
-          regionID = rowset.regionID.getOrElse(0),
-          solarSystemID = orders(0).solarSystemID.getOrElse(0),
-          stationID = stationID,
-          typeID = rowset.typeID,
-          buy = OrderSummary.summarize(buy),
-          sell = OrderSummary.summarize(sell))
-      }
+
+  def fromOrders(orders: Iterable[Order]): Iterable[MarketReport] = {
+    val byStation = orders.groupBy(o => (o.generatedAt, o.regionID, o.solarSystemID, o.stationID, o.typeID))
+    byStation.map { case ((generatedAt, regionID, solarSystemID, stationID, typeID), orders) => 
+      val (buyOrders, sellOrders) = orders.partition(_.bid)
+      MarketReport(
+        generatedAt,
+        regionID,
+        solarSystemID,
+        stationID,
+        typeID,
+        buy = OrderSummary.summarize(buyOrders),
+        sell = OrderSummary.summarize(sellOrders))
     }
   }
 }
