@@ -48,6 +48,11 @@ object UUDIF {
   }
 }
 
-case class UploadKey(name: String, key: String)
+case class UploadKey(
+  name: String,
+  key: Option[String],
+  version: Option[String]  // "version" added as a workaround for EMDU bug
+)
+
 case class Generator(name: String, version: String)
 case class Rowset(generatedAt: String, regionID: Option[Long], typeID: Long, rows: List[Row])
