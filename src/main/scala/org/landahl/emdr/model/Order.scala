@@ -34,8 +34,6 @@ object Order {
         minVolume = row.minVolume,
         issueDate = row.issueDate,
         duration = row.duration)
-      }
-          
-    
+    }
   }
 }
