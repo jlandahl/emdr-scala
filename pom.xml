@@ -115,6 +115,11 @@
       <scope>test</scope>
     </dependency>
     <!-- unsorted -->
+    <dependency>
+    	<groupId>org.apache.camel</groupId>
+    	<artifactId>camel-http4</artifactId>
+    	<version>${camel.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
