@@ -37,24 +37,36 @@ class Routes(config: Config) extends RouteBuilder {
     process(e => e.in = model.UUDIF.extract(e.in[String]))
     choice {
       when (_.in[UUDIF].resultType == "history") to(historyOutputURI)
-      when (_.in[UUDIF].resultType == "orders") {
-        // produce a list of MarketReports for orders matching stationList
-        process { exchange =>
-          val uudif = exchange.in[UUDIF]
-          exchange.in = MarketReport.fromUUDIF(uudif, orderFilter).toList
-        }
-        choice {
-          // proceed only if there's data to report
-          when (_.in[List[MarketReport]] != Nil) {
-            // serialize to JSON 
-            process { exchange =>
-              implicit val formats = Serialization.formats(NoTypeHints)
-              exchange.in = writePretty(exchange.in)
-            }
-            to(marketReportURI)
-          }
-        }
-      }
+      when (_.in[UUDIF].resultType == "orders")  to("direct:orders")
     }
+  }
+
+  from("direct:orders") ==> {
+    // use the UUDIF object to produce a list of MarketReports, filtered  by orderFilter
+    process(e => e.in = MarketReport.fromUUDIF(e.in[UUDIF], orderFilter).toList)
+    // proceed only if we have a non-empty list of MarketReports
+    when (_.in[List[MarketReport]] != Nil) to("direct:market-reports")
+  }  
+
+  from("direct:market-reports") ==> {
+    // send data to Cube collector
+    process { exchange =>
+      val reports = exchange.in[List[MarketReport]]
+      val cubified = reports.map { report => 
+        // create a map for the "data" element of the Cube event,
+        // using the report object minus the "generatedAt" field
+        // (to avoid duplication)
+        val data = Map("regionID" -> report.regionID,
+                       "solarSystemID" -> report.solarSystemID, 
+                       "stationID" -> report.stationID,
+                       "typeID" -> report.typeID,
+                       "buy" -> report.buy,
+                       "sell" -> report.sell)
+        Map("type" -> "market_report", "time" -> report.generatedAt, "data" -> data)
+      }
+      implicit val formats = Serialization.formats(NoTypeHints)
+      exchange.in = writePretty(cubified)
+    }
+    to(marketReportURI)
   }
 }
