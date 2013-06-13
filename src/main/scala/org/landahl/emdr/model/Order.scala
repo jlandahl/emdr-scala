@@ -3,20 +3,20 @@ package org.landahl.emdr.model
 import scala.beans.BeanProperty
 
 case class Order(
-  generatedAt: String,
-  regionID: Int, 
-  solarSystemID: Int,
-  stationID: Int,
-  typeID: Int,
-  orderID: Long,
-  bid: Boolean,
-  price: Double,
-  volEntered: Long,
-  volRemaining: Long,
-  range: Int,
-  minVolume: Int,
-  issueDate: String,
-  duration: Int)
+  @BeanProperty generatedAt: String,
+  @BeanProperty regionID: Int, 
+  @BeanProperty solarSystemID: Int,
+  @BeanProperty stationID: Int,
+  @BeanProperty typeID: Int,
+  @BeanProperty orderID: Long,
+  @BeanProperty bid: Boolean,
+  @BeanProperty price: Double,
+  @BeanProperty volEntered: Long,
+  @BeanProperty volRemaining: Long,
+  @BeanProperty range: Int,
+  @BeanProperty minVolume: Int,
+  @BeanProperty issueDate: String,
+  @BeanProperty duration: Int)
 
 object Order {
   def fromRowset(rowset: Rowset): Iterable[Order] = {
