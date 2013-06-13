@@ -55,4 +55,4 @@ case class UploadKey(
 )
 
 case class Generator(name: String, version: String)
-case class Rowset(generatedAt: String, regionID: Option[Long], typeID: Long, rows: List[Row])
+case class Rowset(generatedAt: String, regionID: Option[Int], typeID: Int, rows: List[Row])

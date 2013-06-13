@@ -2,10 +2,10 @@ package org.landahl.emdr.model
 
 case class MarketReport(
   generatedAt: String,
-  regionID: Option[Long], 
-  solarSystemID: Option[Long], 
-  stationID: Long,
-  typeID: Long,
+  regionID: Int, 
+  solarSystemID: Int, 
+  stationID: Int,
+  typeID: Int,
   buy: Option[OrderSummary], 
   sell: Option[OrderSummary]
 )

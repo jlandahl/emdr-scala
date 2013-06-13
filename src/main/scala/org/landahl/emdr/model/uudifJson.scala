@@ -16,7 +16,7 @@ case class JsonUUDIF(
 
 case class JsonRowset(
   generatedAt: String, 
-  regionID: Option[Long], 
+  regionID: Option[Int], 
   typeID: Int, 
   rows: List[JValue]   // becomes List[Row] in Rowset
 )

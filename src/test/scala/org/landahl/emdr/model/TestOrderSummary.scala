@@ -7,8 +7,8 @@ class TestOrderSummary extends FunSuite {
   def newOrder(price: Double, bid: Boolean) = {
     Order(
       generatedAt = "",
-      regionID = Some(1), 
-      solarSystemID = Some(1),
+      regionID = 1, 
+      solarSystemID = 1,
       stationID = 1,
       typeID = 1,
       orderID = 1,

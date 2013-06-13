@@ -1,11 +1,13 @@
 package org.landahl.emdr.model
 
+import scala.beans.BeanProperty
+
 case class Order(
   generatedAt: String,
-  regionID: Option[Long], 
-  solarSystemID: Option[Long],
-  stationID: Long,
-  typeID: Long, 
+  regionID: Int, 
+  solarSystemID: Int,
+  stationID: Int,
+  typeID: Int,
   orderID: Long,
   bid: Boolean,
   price: Double,
@@ -21,8 +23,8 @@ object Order {
     rowset.rows.collect { case row: OrderRow =>
       Order(
         generatedAt = rowset.generatedAt,
-        regionID = rowset.regionID,
-        solarSystemID = row.solarSystemID,
+        regionID = rowset.regionID.getOrElse(0),
+        solarSystemID = row.solarSystemID.getOrElse(0),
         stationID = row.stationID,
         typeID = rowset.typeID,
         orderID = row.orderID,
