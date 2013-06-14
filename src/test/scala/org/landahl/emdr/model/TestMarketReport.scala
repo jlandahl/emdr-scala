@@ -2,28 +2,12 @@ package org.landahl.emdr.model
 
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers._
-import model.{UUDIF, Rowset, MarketReport, SampleData} 
 
 class TestMarketReport extends FunSuite {
-  
-  test("summarizeRowset with empty row list") {
-    val rowset = Rowset("", Some(1), 1, Nil)
-    val reports = MarketReport.summarizeRowset(rowset)
-    reports.isEmpty should be (false)
-    reports.size should equal (1)
-    val mr = reports.head
-    mr.regionID should equal(1)
-    mr.typeID should equal(1)
-    mr.solarSystemID should equal(0)
-    mr.stationID should equal(0)
-    mr.buy should equal (None)
-    mr.sell should equal (None)
-  }
-
   test("SampleData.orders1") {
     val uudif = UUDIF.extract(SampleData.orders1)
     val reports = MarketReport.fromUUDIF(uudif)
-    reports.size should equal(7)
+    reports.size should equal(6)
   }
   
   test("SampleData.orders4") {
