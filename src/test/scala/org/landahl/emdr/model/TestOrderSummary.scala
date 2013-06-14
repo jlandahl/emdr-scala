@@ -56,7 +56,7 @@ class TestOrderSummary extends FunSuite {
   )
 
   test("buyOrders") {
-    OrderSummary.summarize(sellOrders) match {
+    OrderSummary.summarize(buyOrders) match {
       case Some(summary) => {
         summary.min should equal(9.0)
         summary.max should equal(9.6)
