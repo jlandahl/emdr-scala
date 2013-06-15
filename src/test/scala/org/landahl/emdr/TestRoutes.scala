@@ -15,6 +15,7 @@ class TestRoutes extends CamelTestSupport with RouteBuilderSupport {
 
   @Test
   def testJsonRouteOrders1 {
+    // data in Orders1 should be filtered out, so nothing should end up in either mock endpoint
     getMockEndpoint("mock:market-report").expectedMessageCount(0)
     getMockEndpoint("mock:history").expectedMessageCount(0)
     template.sendBody("direct:emdr.json", model.SampleData.orders1)
@@ -23,6 +24,7 @@ class TestRoutes extends CamelTestSupport with RouteBuilderSupport {
   
   @Test
   def testJsonRouteOrders4 {
+    // data in Orders4 should pass the filter and make it to the mock:market-report endpoint
     getMockEndpoint("mock:market-report").expectedMessageCount(1)
     getMockEndpoint("mock:history").expectedMessageCount(0)
     template.sendBody("direct:emdr.json", model.SampleData.orders4)
@@ -31,6 +33,7 @@ class TestRoutes extends CamelTestSupport with RouteBuilderSupport {
   
   @Test
   def testJsonRouteHistory1 {
+    // data in History1 should make it to the mock:history endpoint
     getMockEndpoint("mock:market-report").expectedMessageCount(0)
     getMockEndpoint("mock:history").expectedMessageCount(1)
     template.sendBody("direct:emdr.json", model.SampleData.history1)
