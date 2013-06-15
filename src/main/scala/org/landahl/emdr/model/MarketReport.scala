@@ -11,7 +11,7 @@ case class MarketReport(
 )
 
 object MarketReport {
-  def fromUUDIF(uudif: UUDIF)(orderFilter: (Order) => Boolean = (order) => true): Iterable[MarketReport] = {
+  def fromUUDIF(uudif: UUDIF, orderFilter: (Order) => Boolean = (order) => true): Iterable[MarketReport] = {
     for {
       rowset <- uudif.rowsets
       orders = Order.fromRowset(rowset).filter(orderFilter)
