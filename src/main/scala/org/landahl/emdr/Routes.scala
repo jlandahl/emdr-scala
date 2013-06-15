@@ -43,7 +43,7 @@ class Routes(config: Config) extends RouteBuilder {
 
   from("direct:orders") ==> {
     // use the UUDIF object to produce a list of MarketReports, filtered  by orderFilter
-    process(e => e.in = MarketReport.fromUUDIF(e.in[UUDIF], orderFilter).toList)
+    process(e => e.in = MarketReport.fromUUDIF(e.in[UUDIF])(orderFilter).toList)
     // proceed only if we have a non-empty list of MarketReports
     when (_.in[List[MarketReport]] != Nil) to("direct:market-reports")
   }  
