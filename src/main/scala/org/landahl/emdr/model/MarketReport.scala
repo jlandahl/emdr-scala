@@ -18,14 +18,8 @@ object MarketReport {
       group <- orders.groupBy(o => (o.generatedAt, o.regionID, o.solarSystemID, o.stationID, o.typeID))
       ((generatedAt, regionID, solarSystemID, stationID, typeID), groupedOrders) = group
       (buyOrders, sellOrders) = groupedOrders.partition(_.bid)
-    } yield 
-      MarketReport(
-        generatedAt,
-        regionID,
-        solarSystemID,
-        stationID,
-        typeID,
-        buy = OrderSummary.summarize(buyOrders),
-        sell = OrderSummary.summarize(sellOrders))
+    } yield MarketReport(generatedAt, regionID, solarSystemID, stationID, typeID,
+                         buy = OrderSummary.summarize(buyOrders),
+                         sell = OrderSummary.summarize(sellOrders))
   }
 }
