@@ -4,6 +4,7 @@ import scala.collection.mutable.ListBuffer
 import org.json4s.native.JsonMethods.parse
 import org.json4s.JsonAST.JValue
 import org.json4s.{JObject, DefaultFormats}
+import org.apache.camel.Converter
 
 case class UUDIF(
   resultType: String,
@@ -14,7 +15,9 @@ case class UUDIF(
   rowsets: List[Rowset]
 )
 
+@Converter
 object UUDIF {
+  @Converter
   def extract(json: String): UUDIF = {
     implicit val formats = DefaultFormats
     val _uudif = parse(json).extract[JsonUUDIF]
