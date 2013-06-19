@@ -58,6 +58,16 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+    	<groupId>org.apache.camel</groupId>
+    	<artifactId>camel-http4</artifactId>
+    	<version>${camel.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.camel</groupId>
+    	<artifactId>camel-mongodb</artifactId>
+    	<version>${camel.version}</version>
+    </dependency>
+    <dependency>
     	<groupId>org.apache.activemq</groupId>
     	<artifactId>activemq-camel</artifactId>
     	<version>5.8.0</version>
@@ -92,6 +102,16 @@
     	<artifactId>mvel2</artifactId>
     	<version>2.1.5.Final</version>
     </dependency>
+    <dependency>
+    	<groupId>org.mongodb</groupId>
+    	<artifactId>casbah-core_2.10</artifactId>
+    	<version>2.6.1</version>
+    </dependency>
+    <dependency>
+    	<groupId>joda-time</groupId>
+    	<artifactId>joda-time</artifactId>
+    	<version>2.2</version>
+    </dependency>
 
     <!-- Test -->
     <dependency>
@@ -120,16 +140,6 @@
       <scope>test</scope>
     </dependency>
     <!-- unsorted -->
-    <dependency>
-    	<groupId>org.apache.camel</groupId>
-    	<artifactId>camel-http4</artifactId>
-    	<version>${camel.version}</version>
-    </dependency>
-    <dependency>
-    	<groupId>org.mongodb</groupId>
-    	<artifactId>casbah-core_2.10</artifactId>
-    	<version>2.6.1</version>
-    </dependency>
   </dependencies>
 
   <build>
