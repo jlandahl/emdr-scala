@@ -18,25 +18,23 @@ object UUDIF {
   def extract(json: String): UUDIF = {
     implicit val formats = DefaultFormats
     val _uudif = parse(json).extract[JsonUUDIF]
-    val rowsets = _uudif.rowsets.map { rowset =>
-      val rows = _uudif.resultType match {
-        case "orders" => rowset.rows.map(r => extractRow[OrderRow](_uudif.columns, r))
-        case "history" => rowset.rows.map(r => extractRow[HistoryRow](_uudif.columns, r))
-      }
-      Rowset(
-        generatedAt = rowset.generatedAt,
-        regionID = rowset.regionID,
-        typeID = rowset.typeID,
-        rows = rows
-      )
-    }
     UUDIF(
       resultType = _uudif.resultType,
       version = _uudif.version,
       uploadKeys = _uudif.uploadKeys,
       generator = _uudif.generator,
       currentTime = _uudif.currentTime,
-      rowsets = rowsets
+      rowsets = _uudif.rowsets.map { rowset =>
+        Rowset(
+          generatedAt = rowset.generatedAt,
+          regionID = rowset.regionID,
+          typeID = rowset.typeID,
+          rows = _uudif.resultType match {
+            case "orders" => rowset.rows.map(r => extractRow[OrderRow](_uudif.columns, r))
+            case "history" => rowset.rows.map(r => extractRow[HistoryRow](_uudif.columns, r))
+          }
+        )
+      }
     )
   }
 
