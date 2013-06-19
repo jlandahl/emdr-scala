@@ -2,7 +2,7 @@ name := "emdr-scala"
 
 version := "0.0.1"
 
-scalaVersion := "2.10.1"
+scalaVersion := "2.10.2"
 
 libraryDependencies ++= List(
   "com.typesafe" % "config" % "1.0.1",
@@ -10,6 +10,8 @@ libraryDependencies ++= List(
   "org.apache.camel" % "camel-jms" % "2.11.0",       // to override activemq-camel dependency
   "org.apache.camel" % "camel-spring" % "2.11.0",    // to override activemq-camel dependency
   "org.apache.camel" % "camel-test" % "2.11.0" % "test", 
+  "org.apache.camel" % "camel-http4" % "2.11.0", 
+  "org.apache.camel" % "camel-mongodb" % "2.11.0", 
   "com.typesafe.akka" %% "akka-zeromq" % "2.1.4",
   "com.typesafe.akka" %% "akka-camel" % "2.1.4",
   "org.apache.activemq" % "activemq-camel" % "5.8.0",
