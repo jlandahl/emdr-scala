@@ -1,0 +1,2 @@
+org.landahl.emdr.converters.MarketReportToDBObject
+org.landahl.emdr.converters.JsonToUUDIF
