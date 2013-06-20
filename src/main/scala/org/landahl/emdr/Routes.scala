@@ -7,10 +7,8 @@ class Routes(config: Config) extends RouteBuilder {
   import org.apache.camel.Exchange
   import org.apache.camel.model.dataformat.ZipDataFormat
   import scala.collection.JavaConversions._
-  import org.json4s.NoTypeHints
-  import org.json4s.native.Serialization
-  import org.json4s.native.Serialization.{write, writePretty}
-  import model.{UUDIF, MarketReport, Order}
+  import model.{UUDIF, MarketReport, Order, HistoryRow}
+  import converters.{MarketReportToCube, HistoryToCube}
 
   val errorURI = config.getString("error.output")
   val emdrInputURI = config.getString("emdr.input")
@@ -29,44 +27,43 @@ class Routes(config: Config) extends RouteBuilder {
   from(emdrInputURI) ==> {
     // unzip (inflate) the EMDR data
     unmarshal(new ZipDataFormat)
+    convertBodyTo(classOf[String])
     to(emdrJsonURI)
   }
     
   from(emdrJsonURI) ==> {
-    // convert the JSON to a UUDIF object
-    process(e => e.in = model.UUDIF.extract(e.in[String]))
+    // use the registered type converter (JsonToUUDIF) to convert the JSON to a UUDIF object
+    convertBodyTo(classOf[UUDIF])
     choice {
-      when (_.in[UUDIF].resultType == "history") to(historyOutputURI)
+      when (_.in[UUDIF].resultType == "history") to("direct:history")
       when (_.in[UUDIF].resultType == "orders")  to("direct:orders")
     }
   }
 
   from("direct:orders") ==> {
-    // use the UUDIF object to produce a list of MarketReports, filtered  by orderFilter
-    process(e => e.in = MarketReport.fromUUDIF(e.in[UUDIF], orderFilter).toList)
+    // use the UUDIF object to produce a list of MarketReports, filtered by orderFilter
+    process(e => e.in = asJavaList(MarketReport.fromUUDIF(e.in[UUDIF], orderFilter).toList))
     // proceed only if we have a non-empty list of MarketReports
     when (_.in[List[MarketReport]] != Nil) to("direct:market-reports")
-  }  
+  }
+  
+  from("direct:market-reports") to ("direct:market-reports-to-mongo", "direct:market-reports-to-cube")
 
-  from("direct:market-reports") ==> {
+  from("direct:history") to("direct:history-to-cube")
+  
+  from("direct:market-reports-to-mongo") ==> {
+    // the registered type converter will automatically convert the MarketReport objects to DBObjects
+    to("mongodb:db?database=eve&collection=market_reports&operation=insert")
+  }
+
+  from("direct:market-reports-to-cube") ==> {
     // send data to Cube collector
-    process { exchange =>
-      val reports = exchange.in[List[MarketReport]]
-      val cubified = reports.map { report => 
-        // create a map for the "data" element of the Cube event,
-        // using the report object minus the "generatedAt" field
-        // (to avoid duplication)
-        val data = Map("regionID" -> report.regionID,
-                       "solarSystemID" -> report.solarSystemID, 
-                       "stationID" -> report.stationID,
-                       "typeID" -> report.typeID,
-                       "buy" -> report.buy,
-                       "sell" -> report.sell)
-        Map("type" -> "market_report", "time" -> report.generatedAt, "data" -> data)
-      }
-      implicit val formats = Serialization.formats(NoTypeHints)
-      exchange.in = writePretty(cubified)
-    }
+    process { exchange => exchange.in = MarketReportToCube.convert(exchange.in[List[MarketReport]]) } 
     to(marketReportURI)
+  }
+
+  from("direct:history-to-cube") ==> {
+    process { exchange => exchange.in = HistoryToCube.convert(exchange.in[UUDIF]) }
+    to(historyOutputURI)    
   }
 }
