@@ -44,3 +44,22 @@ case class HistoryRow(
   high: Double,
   average: Double
 ) extends Row
+
+// JsonUUDIF and JsonRowset are used only for initial JSON extraction
+
+case class JsonUUDIF(
+  resultType: String,
+  version: String,
+  uploadKeys: List[UploadKey],
+  generator: Generator,
+  currentTime: Date,
+  columns: List[String],   // not used in UUDIF
+  rowsets: List[JsonRowset]
+)
+
+case class JsonRowset(
+  generatedAt: Date, 
+  regionID: Option[Int], 
+  typeID: Int, 
+  rows: List[JValue]   // becomes List[Row] in Rowset
+)
