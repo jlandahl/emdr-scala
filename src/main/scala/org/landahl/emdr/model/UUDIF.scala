@@ -1,13 +1,13 @@
 package org.landahl.emdr.model
 
-import scala.collection.mutable.ListBuffer
+import java.util.Date
 
 case class UUDIF(
   resultType: String,
   version: String,
   uploadKeys: List[UploadKey],
   generator: Generator,
-  currentTime: String,
+  currentTime: Date,
   rowsets: List[Rowset]
 )
 
@@ -18,7 +18,7 @@ case class UploadKey(
 )
 
 case class Generator(name: String, version: String)
-case class Rowset(generatedAt: String, regionID: Option[Int], typeID: Int, rows: List[Row])
+case class Rowset(generatedAt: Date, regionID: Option[Int], typeID: Int, rows: List[Row])
 
 trait Row
 
@@ -32,12 +32,12 @@ case class OrderRow(
   volRemaining: Long,
   range: Int,
   minVolume: Int,
-  issueDate: String,
+  issueDate: Date,
   duration: Int
 ) extends Row
 
 case class HistoryRow(
-  date: String,
+  date: Date,
   orders: Int,
   quantity: Int,
   low: Double,

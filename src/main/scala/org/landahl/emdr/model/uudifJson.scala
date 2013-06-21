@@ -1,5 +1,6 @@
 package org.landahl.emdr.model
 
+import java.util.Date
 import org.json4s.JsonAST.JValue
 
 // JsonUUDIF and JsonRowset are used only for initial JSON extraction
@@ -9,13 +10,13 @@ case class JsonUUDIF(
   version: String,
   uploadKeys: List[UploadKey],
   generator: Generator,
-  currentTime: String,
+  currentTime: Date,
   columns: List[String],   // not used in UUDIF
   rowsets: List[JsonRowset]
 )
 
 case class JsonRowset(
-  generatedAt: String, 
+  generatedAt: Date, 
   regionID: Option[Int], 
   typeID: Int, 
   rows: List[JValue]   // becomes List[Row] in Rowset
