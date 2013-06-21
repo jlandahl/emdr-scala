@@ -1,6 +1,7 @@
 package org.landahl.emdr.model
 
 import java.util.Date
+import org.json4s.JsonAST.JValue
 
 case class UUDIF(
   resultType: String,
