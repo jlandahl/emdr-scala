@@ -2,11 +2,12 @@ package org.landahl.emdr.model
 
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers._
+import java.util.Date
 
 class TestOrderSummary extends FunSuite {
   def newOrder(price: Double, bid: Boolean) = {
     Order(
-      generatedAt = "",
+      generatedAt = new Date,
       regionID = 1, 
       solarSystemID = 1,
       stationID = 1,
@@ -18,7 +19,7 @@ class TestOrderSummary extends FunSuite {
       volRemaining = 10,
       range = 1,
       minVolume = 1,
-      issueDate = "",
+      issueDate = new Date,
       duration = 1)
   }
 

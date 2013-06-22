@@ -3,7 +3,7 @@ package org.landahl.emdr.model
 import scala.beans.BeanProperty
 
 case class Order(
-  @BeanProperty generatedAt: String,
+  @BeanProperty generatedAt: java.util.Date,
   @BeanProperty regionID: Int, 
   @BeanProperty solarSystemID: Int,
   @BeanProperty stationID: Int,
@@ -15,7 +15,7 @@ case class Order(
   @BeanProperty volRemaining: Long,
   @BeanProperty range: Int,
   @BeanProperty minVolume: Int,
-  @BeanProperty issueDate: String,
+  @BeanProperty issueDate: java.util.Date,
   @BeanProperty duration: Int)
 
 object Order {

@@ -8,9 +8,13 @@ import org.json4s.{JObject, DefaultFormats}
 import org.landahl.emdr.model.{UUDIF, JsonUUDIF, Rowset, OrderRow, HistoryRow}
 
 object JsonToUUDIF {
+  case object Formats extends DefaultFormats {
+    override def dateFormatter = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+  }
+
   @Converter
   def extract(json: String): UUDIF = {
-    implicit val formats = DefaultFormats
+    implicit val formats = Formats
     val _uudif = parse(json).extract[JsonUUDIF]
     UUDIF(
       resultType = _uudif.resultType,
@@ -26,14 +30,12 @@ object JsonToUUDIF {
           rows = _uudif.resultType match {
             case "orders" => rowset.rows.map(r => extractRow[OrderRow](_uudif.columns, r))
             case "history" => rowset.rows.map(r => extractRow[HistoryRow](_uudif.columns, r))
-          }
-        )
-      }
-    )
+          })
+      })
   }
 
   def extractRow[A: Manifest](columns: List[String], row: JValue) = {
-    implicit val formats = DefaultFormats
+    implicit val formats = Formats
     val fields = columns.zip(row.children)
     val obj = JObject(fields)
     obj.extract[A]

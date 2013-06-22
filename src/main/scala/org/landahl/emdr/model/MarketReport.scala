@@ -1,7 +1,7 @@
 package org.landahl.emdr.model
 
 case class MarketReport(
-  generatedAt: String,
+  generatedAt: java.util.Date,
   regionID: Int, 
   solarSystemID: Int, 
   stationID: Int,

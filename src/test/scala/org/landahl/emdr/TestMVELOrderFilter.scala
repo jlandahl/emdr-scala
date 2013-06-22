@@ -2,12 +2,13 @@ package org.landahl.emdr
 
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
+import java.util.Date
 
 import model.Order
 
 class TestMVELOrderFilter extends FlatSpec {
   val order = Order(
-    generatedAt = "generatedAt",
+    generatedAt = new Date,
     regionID = 1,
     solarSystemID = 2,
     stationID = 3,
@@ -19,13 +20,12 @@ class TestMVELOrderFilter extends FlatSpec {
     volRemaining = 8,
     range = 9,
     minVolume = 10,
-    issueDate = "issueDate",
+    issueDate = new Date,
     duration = 11)
     
   behavior of "An MVELOrderFilter"
 
   it should "provide all Order properties in the local scope" in {
-    assert(MVELOrderFilter.makeFilter("generatedAt == 'generatedAt'")(order))
     assert(MVELOrderFilter.makeFilter("regionID == 1")(order))
     assert(MVELOrderFilter.makeFilter("solarSystemID == 2")(order))
     assert(MVELOrderFilter.makeFilter("stationID == 3")(order))
@@ -37,7 +37,6 @@ class TestMVELOrderFilter extends FlatSpec {
     assert(MVELOrderFilter.makeFilter("volRemaining == 8")(order))
     assert(MVELOrderFilter.makeFilter("range == 9")(order))
     assert(MVELOrderFilter.makeFilter("minVolume == 10")(order))
-    assert(MVELOrderFilter.makeFilter("issueDate == 'issueDate'")(order))
     assert(MVELOrderFilter.makeFilter("duration == 11")(order))
   } 
   

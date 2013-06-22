@@ -4,7 +4,6 @@ import org.apache.camel.Converter
 import com.mongodb.DBObject
 import com.mongodb.casbah.commons.conversions.scala._
 import com.mongodb.casbah.commons.MongoDBObject
-import org.joda.time.DateTime
 
 import org.landahl.emdr.model.MarketReport
 
@@ -12,11 +11,10 @@ import org.landahl.emdr.model.MarketReport
 object MarketReportToDBObject {
   @Converter
   def convert(marketReport: MarketReport): DBObject = {
-    RegisterJodaTimeConversionHelpers()
 
     val builder = MongoDBObject.newBuilder
     builder += (
-      "generatedAt" -> DateTime.parse(marketReport.generatedAt),
+      "generatedAt" -> marketReport.generatedAt,
       "regionID" -> marketReport.regionID,
       "solarSystemID" -> marketReport.solarSystemID,
       "stationID" -> marketReport.stationID,
