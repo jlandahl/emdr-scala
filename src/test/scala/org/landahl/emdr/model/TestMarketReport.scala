@@ -3,15 +3,17 @@ package org.landahl.emdr.model
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers._
 
+import org.landahl.emdr.converters.JsonToUUDIF
+
 class TestMarketReport extends FunSuite {
   test("SampleData.orders1") {
-    val uudif = UUDIF.extract(SampleData.orders1)
+    val uudif = JsonToUUDIF.extract(SampleData.orders1)
     val reports = MarketReport.fromUUDIF(uudif)
     reports.size should equal(6)
   }
   
   test("SampleData.orders4") {
-    val uudif = UUDIF.extract(SampleData.orders4)
+    val uudif = JsonToUUDIF.extract(SampleData.orders4)
     val reports = MarketReport.fromUUDIF(uudif)
     reports.size should equal(1)
 
