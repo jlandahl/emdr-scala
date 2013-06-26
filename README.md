@@ -23,11 +23,11 @@ written to a separate file in the `input` subdirectory of the current directory.
 The `Receiver` can be run from [SBT](http://www.scala-sbt.org/) or
 [Maven](http://maven.apache.org/). For SBT:
 
-  sbt "run-main org.landahl.emdr.Receiver"
+    sbt "run-main org.landahl.emdr.Receiver"
 
 For Maven:
 
-  mvn exec:java -Dexec.mainProgram=org.landahl.emdr.Receiver
+    mvn exec:java -Dexec.mainProgram=org.landahl.emdr.Receiver
 
 Processor
 ---------
