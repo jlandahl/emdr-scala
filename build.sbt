@@ -4,16 +4,19 @@ version := "0.0.1"
 
 scalaVersion := "2.10.2"
 
+resolvers += "Local Maven Repository" at Path.userHome.asFile.toURI.toURL + ".m2/repository"
+
 libraryDependencies ++= List(
   "com.typesafe" % "config" % "1.0.1",
-  "org.apache.camel" % "camel-scala" % "2.11.0", 
+  "org.apache.camel" % "camel-scala" % "2.11.0",
   "org.apache.camel" % "camel-jms" % "2.11.0",       // to override activemq-camel dependency
   "org.apache.camel" % "camel-spring" % "2.11.0",    // to override activemq-camel dependency
-  "org.apache.camel" % "camel-test" % "2.11.0" % "test", 
-  "org.apache.camel" % "camel-http4" % "2.11.0", 
-  "org.apache.camel" % "camel-mongodb" % "2.11.0", 
+  "org.apache.camel" % "camel-test" % "2.11.0" % "test",
+  "org.apache.camel" % "camel-http4" % "2.11.0",
+  "org.apache.camel" % "camel-mongodb" % "2.11.0",
   "com.typesafe.akka" %% "akka-zeromq" % "2.1.4",
   "com.typesafe.akka" %% "akka-camel" % "2.1.4",
+  "org.apache-extras.camel-extra" % "camel-esper" % "2.11-SNAPSHOT",
   "org.apache.activemq" % "activemq-camel" % "5.8.0",
   "org.json4s" %% "json4s-native" % "3.2.2",
   "org.mongodb" %% "casbah" % "2.6.0",
