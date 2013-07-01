@@ -7,8 +7,10 @@ import java.util.Date
 import model.Order
 
 class TestMVELOrderFilter extends FlatSpec {
+  val generatedAt = new Date
   val order = Order(
-    generatedAt = new Date,
+    generatedAt = generatedAt,
+    generatedAt_ms = generatedAt.getTime,
     regionID = 1,
     solarSystemID = 2,
     stationID = 3,
@@ -22,7 +24,7 @@ class TestMVELOrderFilter extends FlatSpec {
     minVolume = 10,
     issueDate = new Date,
     duration = 11)
-    
+
   behavior of "An MVELOrderFilter"
 
   it should "provide all Order properties in the local scope" in {
@@ -38,9 +40,8 @@ class TestMVELOrderFilter extends FlatSpec {
     assert(MVELOrderFilter.makeFilter("range == 9")(order))
     assert(MVELOrderFilter.makeFilter("minVolume == 10")(order))
     assert(MVELOrderFilter.makeFilter("duration == 11")(order))
-  } 
-  
-  it should "allow for matching against lists" in {
+  }
+    it should "allow for matching against lists" in {
     assert(MVELOrderFilter.makeFilter("[1, 2, 3] contains regionID")(order))
     assert(MVELOrderFilter.makeFilter("[1, 2, 3] contains solarSystemID")(order))
     assert(MVELOrderFilter.makeFilter("[1, 2, 3] contains stationID")(order))

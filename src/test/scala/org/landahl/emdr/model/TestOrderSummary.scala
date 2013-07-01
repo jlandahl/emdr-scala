@@ -6,9 +6,11 @@ import java.util.Date
 
 class TestOrderSummary extends FunSuite {
   def newOrder(price: Double, bid: Boolean) = {
+    val generatedAt = new Date
     Order(
-      generatedAt = new Date,
-      regionID = 1, 
+      generatedAt = generatedAt,
+      generatedAt_ms = generatedAt.getTime,
+      regionID = 1,
       solarSystemID = 1,
       stationID = 1,
       typeID = 1,
@@ -26,7 +28,7 @@ class TestOrderSummary extends FunSuite {
   test("empty list") {
     OrderSummary.summarize(List()) should not be ('defined)
   }
-  
+
   val sellOrders = List(
     newOrder(10.50, false),
     newOrder(10.75, false),

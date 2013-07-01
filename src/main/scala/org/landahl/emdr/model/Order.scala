@@ -4,6 +4,7 @@ import scala.beans.BeanProperty
 
 case class Order(
   @BeanProperty generatedAt: java.util.Date,
+  @BeanProperty generatedAt_ms: Long,
   @BeanProperty regionID: Int, 
   @BeanProperty solarSystemID: Int,
   @BeanProperty stationID: Int,
