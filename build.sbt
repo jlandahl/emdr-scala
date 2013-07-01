@@ -27,5 +27,3 @@ libraryDependencies ++= List(
   "org.apache.commons" % "commons-math3" % "3.2",
   "org.mvel" % "mvel2" % "2.1.5.Final"
 )
-
-net.virtualvoid.sbt.graph.Plugin.graphSettings
