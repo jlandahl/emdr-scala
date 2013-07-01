@@ -3,18 +3,20 @@ package org.landahl.emdr.model
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers._
 
-import org.landahl.emdr.converters.JsonToUUDIF
+import org.landahl.emdr.converters.{JsonToUUDIF, UUDIFToOrders}
 
 class TestMarketReport extends FunSuite {
   test("SampleData.orders1") {
     val uudif = JsonToUUDIF.extract(SampleData.orders1)
-    val reports = MarketReport.fromUUDIF(uudif)
+    val orders = UUDIFToOrders.extractOrders(uudif)
+    val reports = MarketReport.fromOrders(orders)
     reports.size should equal(6)
   }
-  
+
   test("SampleData.orders4") {
     val uudif = JsonToUUDIF.extract(SampleData.orders4)
-    val reports = MarketReport.fromUUDIF(uudif)
+    val orders = UUDIFToOrders.extractOrders(uudif)
+    val reports = MarketReport.fromOrders(orders)
     reports.size should equal(1)
 
     val mr = reports.head
@@ -22,7 +24,7 @@ class TestMarketReport extends FunSuite {
     mr.solarSystemID should equal (1)
     mr.stationID should equal(1)
     mr.typeID should equal(1)
-    
+
     mr.buy should be ('defined)
     val buy = mr.buy.get
     buy.min should equal(9.0)
@@ -38,6 +40,5 @@ class TestMarketReport extends FunSuite {
     sell.mean should equal(23.7)
     sell.stddev.floor should equal(28.0)
     sell.volume should equal(5000)
-    
   }
 }
