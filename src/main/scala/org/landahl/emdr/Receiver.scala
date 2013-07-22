@@ -2,10 +2,7 @@ package org.landahl.emdr
 
 import com.typesafe.config.ConfigFactory
 import akka.actor.{ ActorSystem, Props }
-import akka.camel.CamelExtension
-import org.apache.activemq.camel.component.ActiveMQComponent
-
-import org.landahl.emdr.actors.{ ZeroMQReceiver, CamelProducer }
+import org.landahl.emdr.actors.{ ZeroMQReceiver, KafkaProducer }
 
 object Receiver extends App {
   val config = ConfigFactory.load
@@ -13,9 +10,6 @@ object Receiver extends App {
   val queueURI = config.getString("emdr.input")
 
   val system = ActorSystem("EMDR")
-  val camel = CamelExtension(system)
-  camel.context.addComponent("activemq", ActiveMQComponent.activeMQComponent(config.getString("activemq.uri")))
-
-  val queueProducer = system.actorOf(CamelProducer.props(queueURI), "queueProducer")
+  val queueProducer = system.actorOf(Props[KafkaProducer])
   val receiver = system.actorOf(ZeroMQReceiver.props(emdrURI, queueProducer), "receiver")
 }
