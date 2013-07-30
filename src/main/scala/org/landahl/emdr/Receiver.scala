@@ -10,6 +10,6 @@ object Receiver extends App {
   val queueURI = config.getString("emdr.input")
 
   val system = ActorSystem("EMDR")
-  val queueProducer = system.actorOf(Props[KafkaProducer])
+  val queueProducer = system.actorOf(KafkaProducer.props)
   val receiver = system.actorOf(ZeroMQReceiver.props(emdrURI, queueProducer), "receiver")
 }
