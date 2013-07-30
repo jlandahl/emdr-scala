@@ -1,12 +1,11 @@
 package org.landahl.emdr.actors
 
-import akka.actor.Actor
+import akka.actor.{ Actor, ActorRef, Props }
 import kafka.consumer.{ Consumer, ConsumerConfig }
-
 import org.landahl.emdr.Settings
 import org.landahl.emdr.util.Zip
 
-class KafkaConsumer extends Actor {
+class KafkaConsumer(processor: ActorRef) extends Actor {
   case object Poll
 
   val settings = Settings(context.system)
@@ -37,7 +36,7 @@ class KafkaConsumer extends Actor {
 
     case data: Array[Byte] => {
       val json = Zip.inflate(data)
-      println(json)
+      processor ! json
     }
 
     case _ =>
@@ -47,4 +46,8 @@ class KafkaConsumer extends Actor {
     self ! iterator.next.message
     self ! Poll
   }
+}
+
+object KafkaConsumer {
+  def props(processor: ActorRef) = Props(new KafkaConsumer(processor))
 }
