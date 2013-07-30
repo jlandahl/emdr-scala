@@ -8,5 +8,5 @@ object Processor2 extends App {
   implicit val system = ActorSystem("EMDR")
   val historyStore = system.actorOf(HistoryStore.props)
   val processor = system.actorOf(UUDIFProcessor.props(historyStore))
-  val queueProducer = system.actorOf(KafkaConsumer.props(processor))
+  val queueConsumer = system.actorOf(KafkaConsumer.props(processor))
 }
