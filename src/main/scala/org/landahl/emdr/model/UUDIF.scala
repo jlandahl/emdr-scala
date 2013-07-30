@@ -1,6 +1,7 @@
 package org.landahl.emdr.model
 
 import java.util.Date
+import scala.beans.BeanProperty
 import org.json4s.JsonAST.JValue
 
 case class UUDIF(
@@ -19,7 +20,12 @@ case class UploadKey(
 )
 
 case class Generator(name: String, version: String)
-case class Rowset(generatedAt: Date, regionID: Option[Int], typeID: Int, rows: List[Row])
+
+case class Rowset(
+  @BeanProperty generatedAt: Date,
+  @BeanProperty regionID: Option[Int],
+  @BeanProperty typeID: Int,
+  @BeanProperty rows: List[Row])
 
 trait Row
 
