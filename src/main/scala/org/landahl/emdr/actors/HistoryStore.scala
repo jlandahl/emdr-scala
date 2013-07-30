@@ -1,6 +1,6 @@
 package org.landahl.emdr.actors
 
-import akka.actor.Actor
+import akka.actor.{ Actor, Props }
 import reactivemongo.api.{ MongoDriver, DB, Collection }
 import reactivemongo.api.collections.default.BSONCollection
 import reactivemongo.bson.{ BSONDocument, BSONDateTime }
@@ -43,4 +43,8 @@ class HistoryStore extends Actor {
       collection.update(selector, update, upsert = true)
     }
   }
+}
+
+object HistoryStore {
+  def props = Props[HistoryStore]
 }
