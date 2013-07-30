@@ -10,6 +10,8 @@ class Settings(config: Config) extends Extension {
   val kafkaGroupId = config.getString("emdr.kafka.groupID")
   val kafkaTopic = config.getString("emdr.kafka.topic")
   val kafkaBrokers = config.getString("emdr.kafka.brokers")
+  val mongoServer = config.getString("emdr.mongo.server")
+  val mongoDatabase = config.getString("emdr.mongo.database")
 }
 
 object Settings extends ExtensionId[Settings] with ExtensionIdProvider {
