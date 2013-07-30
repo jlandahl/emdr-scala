@@ -21,6 +21,11 @@ class KafkaProducer extends Actor {
     case data: Array[Byte] => {
       producer.send(new KeyedMessage[Int, Array[Byte]](settings.kafkaTopic, data))
     }
+    case _ =>
   }
 
+}
+
+object KafkaProducer {
+  def props = Props(new KafkaProducer)
 }
