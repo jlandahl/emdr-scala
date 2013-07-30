@@ -7,3 +7,6 @@
 /.worksheet
 /input
 /output
+/.ensime*
+/.idea*
+*.iml
