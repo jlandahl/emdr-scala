@@ -2,6 +2,8 @@ package org.landahl.emdr.actors
 
 import akka.actor.{ Actor, ActorRef, Props }
 import kafka.consumer.{ Consumer, ConsumerConfig }
+import kafka.utils.ZkUtils
+
 import org.landahl.emdr.Settings
 import org.landahl.emdr.util.Zip
 
@@ -17,7 +19,7 @@ class KafkaConsumer(processor: ActorRef) extends Actor {
     props.put("zookeeper.session.timeout.ms", "400")
     props.put("zookeeper.sync.time.ms", "200")
     props.put("auto.commit.interval.ms", "1000")
-    props.put("auto.offset.reset", "smallest")
+    props.put("auto.offset.reset", settings.kafkaOffset)
     new ConsumerConfig(props)
   }
   val consumer = Consumer.create(consumerConfig)
@@ -27,7 +29,8 @@ class KafkaConsumer(processor: ActorRef) extends Actor {
   val iterator = stream.iterator
 
   override def preStart = {
-    super.preStart
+    if (settings.kafkaOffset == "smallest")
+      ZkUtils.maybeDeletePath(settings.zookeeperURI, "/consumers/" + settings.kafkaGroupId)
     self ! Poll
   }
 
