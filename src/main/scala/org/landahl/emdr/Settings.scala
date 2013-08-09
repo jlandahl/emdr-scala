@@ -7,6 +7,8 @@ import com.typesafe.config.{ Config, ConfigException }
 import java.util.concurrent.TimeUnit
 
 class Settings(config: Config) extends Extension {
+  val emdrURI = config.getString("emdr.uri")
+
   val zookeeperURI = config.getString("emdr.zookeeperURI")
   val kafkaGroupId = config.getString("emdr.kafka.groupID")
   val kafkaTopic = config.getString("emdr.kafka.topic")
