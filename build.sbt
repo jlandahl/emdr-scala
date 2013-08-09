@@ -12,20 +12,12 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.0.1",
-  "org.apache.camel" % "camel-scala" % "2.11.0",
-  "org.apache.camel" % "camel-jms" % "2.11.0",       // to override activemq-camel dependency
-  "org.apache.camel" % "camel-spring" % "2.11.0",    // to override activemq-camel dependency
-  "org.apache.camel" % "camel-test" % "2.11.0" % "test",
-  "org.apache.camel" % "camel-http4" % "2.11.0",
-  "org.apache.camel" % "camel-mongodb" % "2.11.0",
   "com.typesafe.akka" %% "akka-zeromq" % "2.2.0",
-  "com.typesafe.akka" %% "akka-camel" % "2.2.0",
   "com.typesafe.akka" %% "akka-testkit" % "2.2.0",
-  "org.apache-extras.camel-extra" % "camel-esper" % "2.11-SNAPSHOT",
-  "org.apache.activemq" % "activemq-camel" % "5.8.0",
-  "org.apache.kafka" %% "kafka" % "0.8.0-SNAPSHOT" exclude("org.slf4j", "slf4j-simple"),
+  "com.espertech" % "esper" % "4.9.0",
+  //"org.apache.kafka" %% "kafka" % "0.8.0-SNAPSHOT" exclude("org.slf4j", "slf4j-simple"),
+  "com.sksamuel.kafka" %% "kafka" % "0.8.0-beta1",
   "org.json4s" %% "json4s-native" % "3.2.2",
-  "org.mongodb" %% "casbah" % "2.6.0",
   "org.reactivemongo" %% "reactivemongo" % "0.10-SNAPSHOT",
   "com.typesafe.slick" %% "slick" % "1.0.0",
   "org.xerial" % "sqlite-jdbc" % "3.7.2",

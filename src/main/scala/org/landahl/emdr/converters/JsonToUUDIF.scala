@@ -1,6 +1,5 @@
 package org.landahl.emdr.converters
 
-import org.apache.camel.Converter
 import org.json4s.native.JsonMethods.parse
 import org.json4s.JsonAST.JValue
 import org.json4s.{JObject, DefaultFormats}
@@ -12,7 +11,6 @@ object JsonToUUDIF {
     override def dateFormatter = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
   }
 
-  @Converter
   def extract(json: String): UUDIF = {
     implicit val formats = Formats
     val _uudif = parse(json).extract[JsonUUDIF]

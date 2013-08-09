@@ -2,11 +2,9 @@ package org.landahl.emdr.converters
 
 import java.util.{ List => JList }
 import scala.collection.JavaConverters._
-import org.apache.camel.Converter
 import org.landahl.emdr.model.{ Rowset, Order, OrderRow }
 
 object RowsetToOrders {
-  @Converter
   def extractOrders(rowset: Rowset): JList[Order] = {
     rowset.rows.collect {
       case row: OrderRow =>
