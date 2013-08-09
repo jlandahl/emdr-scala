@@ -4,11 +4,13 @@ version := "0.0.1"
 
 scalaVersion := "2.10.2"
 
-resolvers += "Local Maven Repository" at Path.userHome.asFile.toURI.toURL + ".m2/repository"
+resolvers ++= Seq(
+  "Local Maven Repository" at Path.userHome.asFile.toURI.toURL + ".m2/repository",
+  "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
+  "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
+)
 
-resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
-
-libraryDependencies ++= List(
+libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.0.1",
   "org.apache.camel" % "camel-scala" % "2.11.0",
   "org.apache.camel" % "camel-jms" % "2.11.0",       // to override activemq-camel dependency
