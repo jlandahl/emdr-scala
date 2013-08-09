@@ -1,6 +1,6 @@
 package org.landahl.emdr
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import com.typesafe.config.Config
 import org.apache.camel.scala.dsl.builder.RouteBuilder
 import org.apache.camel.model.dataformat.ZipDataFormat
@@ -8,6 +8,8 @@ import com.espertech.esper.event.map.MapEventBean
 import org.landahl.emdr.converters.UUDIFToOrders
 import org.landahl.emdr.model.UUDIF
 import org.landahl.emdr.model.Order
+import org.landahl.emdr.model.Rowset
+import org.landahl.emdr.converters.RowsetToOrders
 
 class EsperRouting(config: Config) extends RouteBuilder {
   val emdrInputURI = config.getString("emdr.input")
@@ -31,24 +33,35 @@ class EsperRouting(config: Config) extends RouteBuilder {
     // use the registered type converter (JsonToUUDIF) to convert the JSON to a UUDIF object
     as(classOf[UUDIF])
     choice {
-      //when(_.in[UUDIF].resultType == "history") to ("direct:history")
-      when(_.in[UUDIF].resultType == "orders") to ("direct:orders")
+      when(_.in[UUDIF].resultType == "history") to ("direct:uudif-history")
+      when(_.in[UUDIF].resultType == "orders") to ("direct:uudif-orders")
     }
   }
 
-  from("direct:history") to ("mock:history")
+  // TODO
+  from("direct:uudif-history") to ("mock:history")
 
-  from("direct:orders") ==> {
-    process(e => e.in = UUDIFToOrders.extractOrders(e.in[UUDIF]))
+  from("direct:uudif-orders") ==> {
+    as(classOf[java.util.List[Rowset]])
+    split(body) { to("esper:rowsets") }
+  }
+
+  from("esper:rowsets?eql=select * from Rowsets") ==> {
     as(classOf[java.util.List[Order]])
     split(body) { to("esper:orders") }
   }
 
-  from("esper:orders?eql=select stationID, typeID, min(price) as sell_price from SellOrders.win:time(60 sec) group by stationID, typeID output last every 60 seconds") ==> {
+  from("esper:orders?eql=select * from SellEvents") ==> {
     process { exchange =>
       val event = exchange.in[MapEventBean].getProperties
-      if (event("sell_price") != null)
-        println(event)
+      println(event)
     }
   }
+
+ from("esper:orders?eql=select typeID, count(*) from Orders group by typeID output snapshot every 30 seconds order by count(*) desc limit 10") ==> {
+   process { exchange =>
+     val event = exchange.in[MapEventBean].getProperties
+     println(event)
+   }
+ }
 }
