@@ -1,13 +1,14 @@
 package org.landahl.emdr.actors
 
-import akka.actor.{ Actor, ActorRef, Props }
-import kafka.consumer.{ Consumer, ConsumerConfig }
+import scala.concurrent.{ExecutionContext, Future}
+import akka.actor.{Actor, ActorRef, Props, ActorLogging}
+import kafka.consumer.{ Consumer, ConsumerConfig, Whitelist }
 import kafka.utils.ZkUtils
 
 import org.landahl.emdr.Settings
 import org.landahl.emdr.util.Zip
 
-class KafkaConsumer(processor: ActorRef) extends Actor {
+class KafkaConsumer(processor: ActorRef) extends Actor with ActorLogging {
   case object Poll
 
   val settings = Settings(context.system)
@@ -18,19 +19,23 @@ class KafkaConsumer(processor: ActorRef) extends Actor {
     props.put("group.id", settings.kafkaGroupId)
     props.put("zookeeper.session.timeout.ms", "400")
     props.put("zookeeper.sync.time.ms", "200")
+    props.put("auto.commit.enable", "true")
     props.put("auto.commit.interval.ms", "1000")
     props.put("auto.offset.reset", settings.kafkaOffset)
     new ConsumerConfig(props)
   }
-  val consumer = Consumer.create(consumerConfig)
-  val topicCountMap = Map(settings.kafkaTopic -> 1)
-  val consumerMap = consumer.createMessageStreams(topicCountMap)
-  val stream = consumerMap(settings.kafkaTopic)(0)
-  val iterator = stream.iterator
+  lazy val consumer = Consumer.create(consumerConfig)
+  lazy val topicCountMap = Map(settings.kafkaTopic -> 1)
+  lazy val consumerMap = consumer.createMessageStreams(topicCountMap)
+  lazy val stream = consumerMap(settings.kafkaTopic)(0)
+  lazy val iterator = stream.iterator
 
   override def preStart = {
-    if (settings.kafkaOffset == "smallest")
+    super.preStart
+    if (settings.kafkaOffset == "smallest") {
+      log.debug("Resetting ZooKeeper consumer entry for group {}", settings.kafkaGroupId)
       ZkUtils.maybeDeletePath(settings.zookeeperURI, "/consumers/" + settings.kafkaGroupId)
+    }
     self ! Poll
   }
 
@@ -38,16 +43,24 @@ class KafkaConsumer(processor: ActorRef) extends Actor {
     case Poll => poll
 
     case data: Array[Byte] => {
+      log.debug("Inflating byte array")
       val json = Zip.inflate(data)
+      log.debug("Passing JSON to processor")
       processor ! json
     }
 
-    case _ =>
+    case x => log.warning("Received unknown message: ", x)
   }
 
   private def poll = {
-    self ! iterator.next.message
-    self ! Poll
+    import ExecutionContext.Implicits.global
+    Future {
+      log.debug("polling")
+      iterator.next.message
+    } onComplete { f =>
+      self ! f.get
+      self ! Poll
+    }
   }
 }
 
