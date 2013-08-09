@@ -1,11 +1,17 @@
 package org.landahl.emdr.actors
 
 import akka.actor.{ Actor, ActorRef, Props, ActorLogging }
+
 import org.landahl.emdr.converters.JsonToUUDIF
 import org.landahl.emdr.model.UUDIF
+import org.landahl.emdr.util.Zip
 
 class UUDIFProcessor(historyStore: ActorRef, orderProcessor: ActorRef) extends Actor  with ActorLogging {
   def receive = {
+    case data: Array[Byte] => {
+      val json = Zip.inflate(data)
+      processJson(json)
+    }
     case json: String => processJson(json)
     case x => log.debug("Received unknown message: ", x)
   }
