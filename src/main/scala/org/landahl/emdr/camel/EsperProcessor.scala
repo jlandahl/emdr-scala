@@ -7,6 +7,8 @@ import org.apache.camel.scala.dsl.builder.RouteBuilderSupport
 import org.apache.camel.main.Main
 import org.apache.activemq.camel.component.ActiveMQComponent
 
+import org.landahl.emdr.EsperStatements
+
 object EsperProcessor extends App with RouteBuilderSupport {
   val config = ConfigFactory.load
   val rowsetFilter = catching(classOf[ConfigException.Missing]) opt config.getString("emdr.rowset-filter")
