@@ -1,12 +1,12 @@
 package org.landahl.emdr.actors
 
-import akka.actor.{ Actor, Props }
+import akka.actor.{ Actor, Props, ActorLogging }
 import kafka.javaapi.producer.Producer
 import kafka.producer.{ ProducerConfig, KeyedMessage }
 
 import org.landahl.emdr.Settings
 
-class KafkaProducer extends Actor {
+class KafkaProducer extends Actor with ActorLogging {
   val settings = Settings(context.system)
 
   val producerConfig = {
@@ -19,9 +19,11 @@ class KafkaProducer extends Actor {
 
   def receive = {
     case data: Array[Byte] => {
+      log.debug("Sending {} bytes to Kafka", data.length)
       producer.send(new KeyedMessage[Int, Array[Byte]](settings.kafkaTopic, data))
     }
-    case _ =>
+
+    case x => log.warning("Received unknown message: ", x)
   }
 
 }
