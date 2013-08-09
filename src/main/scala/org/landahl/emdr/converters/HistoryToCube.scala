@@ -10,17 +10,14 @@ object HistoryToCube {
   def convert(uudif: UUDIF): String = {
     val cubified = for {
       rowset <- uudif.rowsets
-      row <- rowset.rows
-    } yield row match {
-      case row: HistoryRow =>
-        Map("type" -> "price_history",
-            "time" -> row.date,
-            "data" -> Map("orders" -> row.orders,
-                          "quantity" -> row.quantity,
-                          "low" -> row.low,
-                          "high" -> row.high,
-                          "average" -> row.average))
-    }
+      HistoryRow(date, orders, quantity, low, high, average) <- rowset.rows
+    } yield Map("type" -> "price_history",
+                "time" -> date,
+                "data" -> Map("orders" -> orders,
+                              "quantity" -> quantity,
+                              "low" -> low,
+                              "high" -> high,
+                              "average" -> average))
     implicit val formats = Serialization.formats(NoTypeHints)
     writePretty(cubified)
   }
