@@ -1,13 +1,13 @@
 package org.landahl.emdr.actors
 
-import akka.actor.{ Actor, ActorRef, Props }
+import akka.actor.{ Actor, ActorRef, Props, ActorLogging }
 import org.landahl.emdr.converters.JsonToUUDIF
 import org.landahl.emdr.model.UUDIF
 
-class UUDIFProcessor(historyStore: ActorRef, orderProcessor: ActorRef) extends Actor {
+class UUDIFProcessor(historyStore: ActorRef, orderProcessor: ActorRef) extends Actor  with ActorLogging {
   def receive = {
     case json: String => processJson(json)
-    case _ =>
+    case x => log.debug("Received unknown message: ", x)
   }
 
   def processJson(json: String) = {
