@@ -43,7 +43,7 @@ class HistoryStore extends Actor with ActorLogging {
         "low" -> low,
         "high" -> high,
         "average" -> average)
-      collection.update(selector, update, upsert = true)
+      collection.uncheckedUpdate(selector, update, upsert = true)
     }
   }
 }
