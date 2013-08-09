@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 class Settings(config: Config) extends Extension {
   val processingMethod = config.getString("emdr.processing-method")
 
-  val emdrURI = config.getString("emdr.uri")
+  val emdrURI = config.getString("emdr.source-uri")
 
   val zookeeperURI = config.getString("emdr.zookeeperURI")
   val kafkaGroupId = config.getString("emdr.kafka.groupID")
