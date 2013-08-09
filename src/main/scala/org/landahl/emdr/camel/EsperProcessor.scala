@@ -1,4 +1,4 @@
-package org.landahl.emdr
+package org.landahl.emdr.camel
 
 import scala.util.control.Exception.catching
 import scala.collection.JavaConversions._

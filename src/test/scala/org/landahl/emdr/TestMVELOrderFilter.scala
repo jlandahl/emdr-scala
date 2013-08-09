@@ -5,6 +5,7 @@ import org.scalatest.matchers.ShouldMatchers
 import java.util.Date
 
 import model.Order
+import org.landahl.emdr.util.MVELOrderFilter
 
 class TestMVELOrderFilter extends FlatSpec {
   val generatedAt = new Date

@@ -1,4 +1,4 @@
-package org.landahl.emdr
+package org.landahl.emdr.camel
 
 import org.apache.camel.scala.dsl.builder.RouteBuilder
 

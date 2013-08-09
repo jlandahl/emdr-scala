@@ -1,4 +1,4 @@
-package org.landahl.emdr
+package org.landahl.emdr.camel
 
 import scala.collection.JavaConverters._
 import com.typesafe.config.Config

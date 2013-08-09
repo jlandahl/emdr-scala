@@ -1,8 +1,10 @@
-package org.landahl.emdr
+package org.landahl.emdr.camel
 
 import com.typesafe.config.Config
 import org.apache.camel.scala.dsl.builder.RouteBuilder
-import org.landahl.emdr.converters.UUDIFToOrders
+import org.landahl.emdr.converters.{MarketReportToMongoUpdate, HistoryToCube, MarketReportToCube, UUDIFToOrders}
+import org.landahl.emdr.{converters, model}
+import org.landahl.emdr.model.{MarketReport, UUDIF, Order}
 
 class Routes(config: Config) extends RouteBuilder {
   import org.apache.camel.Exchange

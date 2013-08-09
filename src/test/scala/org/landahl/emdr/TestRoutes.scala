@@ -4,6 +4,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.camel.test.junit4.CamelTestSupport
 import org.apache.camel.scala.dsl.builder.RouteBuilderSupport
 import org.junit.{Test, Before}
+import org.landahl.emdr.camel.Routes
 
 class TestRoutes extends CamelTestSupport with RouteBuilderSupport {
   def config = {

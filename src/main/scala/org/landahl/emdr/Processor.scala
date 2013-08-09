@@ -2,6 +2,7 @@ package org.landahl.emdr
 
 import com.typesafe.config.ConfigFactory
 import org.apache.camel.scala.dsl.builder.RouteBuilderSupport
+import org.landahl.emdr.camel.Routes
 
 object Processor extends App with RouteBuilderSupport {
   import org.apache.camel.main.Main

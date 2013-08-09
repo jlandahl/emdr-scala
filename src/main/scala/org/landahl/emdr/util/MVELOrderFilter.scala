@@ -1,8 +1,8 @@
-package org.landahl.emdr
+package org.landahl.emdr.util
 
 import org.mvel2.MVEL
 
-import model.Order
+import org.landahl.emdr.model.Order
 
 object MVELOrderFilter {
   def makeFilter(expression: String): (Order) => Boolean = {
