@@ -71,25 +71,7 @@ class EsperOrderProcessor extends Actor with ActorLogging {
 
     case rowset: Rowset => {
       log.debug("Received Rowset with {} rows", rowset.rows.length)
-      for(OrderRow(solarSystemID, stationID, orderID, bid, price, volEntered, volRemaining, range, minVolume, issueDate, duration) <- rowset.rows)
-        runtime.sendEvent(
-          Order(
-            generatedAt = rowset.generatedAt,
-            generatedAt_ms = rowset.generatedAt.getTime,
-            regionID = rowset.regionID.getOrElse(0),
-            solarSystemID = solarSystemID.getOrElse(0),
-            stationID = stationID,
-            typeID = rowset.typeID,
-            orderID = orderID,
-            bid = bid,
-            price = price,
-            volEntered = volEntered,
-            volRemaining = volRemaining,
-            range = range,
-            minVolume = minVolume,
-            issueDate = issueDate,
-            duration = duration)
-        )
+      RowsetToOrders.extractOrders(rowset).foreach(runtime.sendEvent(_))
     }
   }
 }
