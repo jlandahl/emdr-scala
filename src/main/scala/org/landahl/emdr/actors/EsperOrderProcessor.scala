@@ -1,9 +1,12 @@
 package org.landahl.emdr.actors
 
 import akka.actor.{Actor, Props, ActorLogging}
-import org.landahl.emdr.model.{UUDIF, Rowset, OrderRow, Order}
-import org.landahl.emdr.{Settings, EsperStatements}
 import com.espertech.esper.client.{EventBean, UpdateListener, EPServiceProviderManager}
+import com.espertech.esper.event.map.MapEventBean
+
+import org.landahl.emdr.{Settings, EsperStatements}
+import org.landahl.emdr.model.{UUDIF, Rowset, OrderRow, Order}
+import org.landahl.emdr.converters.RowsetToOrders
 
 class EsperOrderProcessor extends Actor with ActorLogging {
   val settings = Settings(context.system)
@@ -21,24 +24,24 @@ class EsperOrderProcessor extends Actor with ActorLogging {
   EsperStatements.createStatements(settings.rowsetFilter, settings.orderFilter)
 
   admin createEPL("select * from Rowsets") addListener(listener)
-  admin createEPL("select * from SellEvents order by volume desc") addListener new UpdateListener {
+  admin createEPL("select * from SellEvents") addListener new UpdateListener {
     def update(newEvents: Array[EventBean], oldEvents: Array[EventBean]) {
       val events = newEvents.collect {
-        case map: java.util.Map[String,Any] if map.get("sell_price") != null => map
+        case mapEvent: MapEventBean if mapEvent.get("sell_price") != null => mapEvent
       }
       if (events.length > 0) {
         println
-        events.foreach(println(_))
+        events.foreach(eb => println(eb.getProperties))
       }
     }
   }
 
-  admin createEPL("select count(*) as cnt from Orders.win:time(10 sec) output last every 10 seconds") addListener new UpdateListener{
+  admin createEPL("select count(*) as cnt from Orders.win:time(10 sec) output last every 15 seconds") addListener new UpdateListener{
     def update(newEvents: Array[EventBean], oldEvents: Array[EventBean]) {
       newEvents.foreach{ eb =>
         eb.getUnderlying match {
           case mapEvent: java.util.Map[String, Any] =>
-            println(s"Processed ${mapEvent.get("cnt")} events")
+            println(s"Processed ${mapEvent.get("cnt")} orders")
         }
       }
     }
