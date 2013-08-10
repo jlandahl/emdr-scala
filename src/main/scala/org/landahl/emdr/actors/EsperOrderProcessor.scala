@@ -40,7 +40,7 @@ class EsperOrderProcessor extends Actor with ActorLogging {
     def update(newEvents: Array[EventBean], oldEvents: Array[EventBean]) {
       newEvents.foreach{ eb =>
         eb.getUnderlying match {
-          case mapEvent: java.util.Map[String, Any] =>
+          case mapEvent: MapEventBean =>
             println(s"Processed ${mapEvent.get("cnt")} orders")
         }
       }
